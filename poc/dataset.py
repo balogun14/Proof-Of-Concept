@@ -28,7 +28,7 @@ class ImageDataset(Dataset):
         """
         return len(self.files)
 
-    def __getitem__(self, i: int) -> np.ndarray:
+    def __getitem__(self, i: int) -> tuple[np.ndarray]:
         """
         Get datapoint.
 
@@ -43,4 +43,4 @@ class ImageDataset(Dataset):
             Image data.
         """
         image = Image.open(self.files[i])
-        return self.transform(image)
+        return (self.transform(image),)

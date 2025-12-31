@@ -71,9 +71,11 @@ def train(
         Train config.
     """
     model.train()
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     for _ in range(config.nb_epochs):
-        for x in tqdm(loader):
+        for data in tqdm(loader):
+            x = data[0]
             if len(x) < config.batch_size:
                 continue
 
