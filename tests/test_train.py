@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 import torch
+import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
@@ -37,9 +38,9 @@ def test_train_autoencoder(combine_spatial: bool):
     base_dir = Path(__file__).parent.parent
     shutil.rmtree(base_dir / "data" / "out" / "test_train", ignore_errors=True)
 
-    model = AutoEncoder(combine_spatial=combine_spatial).to(
-        device=device, dtype=dtype
-    )
+    model = AutoEncoder(
+        combine_spatial=combine_spatial, final_activation=nn.Sigmoid()
+    ).to(device=device, dtype=dtype)
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     x = torch.tensor(np.random.rand(100, 3, 224, 224)).to(
@@ -61,9 +62,9 @@ def test_train_autoencoder(combine_spatial: bool):
         base_dir / "data" / "out" / "test_train" / "model.pt",
         map_location=device,
     )
-    model = AutoEncoder(combine_spatial=combine_spatial).to(
-        device=device, dtype=dtype
-    )
+    model = AutoEncoder(
+        combine_spatial=combine_spatial, final_activation=nn.Sigmoid()
+    ).to(device=device, dtype=dtype)
     model.load_state_dict(weights)
     y02 = model(x[0, ...].unsqueeze(0))
 

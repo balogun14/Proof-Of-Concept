@@ -130,7 +130,9 @@ def main():
     )
 
     logger.info("Building model.")
-    model = AutoEncoder().to(device=config.device, dtype=config.dtype)
+    model = AutoEncoder(combine_spatial=False, final_activation=nn.Tanh()).to(
+        device=config.device, dtype=config.dtype
+    )
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     logger.info("Training model.")

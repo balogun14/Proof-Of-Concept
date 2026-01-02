@@ -5,9 +5,20 @@ import torch.nn as nn
 class AutoEncoder(nn.Module):
     """
     AutoEncoder.
+
+    Parameters
+    ----------
+    combine_spatial: bool
+        Combine spatial dimensions.
+    final_activation: nn.Module
+        Final activation function.
     """
 
-    def __init__(self, combine_spatial: bool):
+    def __init__(
+        self,
+        combine_spatial: bool,
+        final_activation: None | nn.Module,
+    ):
         super().__init__()
 
         # Encoder: 3 -> 64 → 32
@@ -50,9 +61,12 @@ class AutoEncoder(nn.Module):
                 nn.Conv2d(16, 3, 3, padding=1),
             )
 
-        self.final = nn.Sigmoid()
+        self.final = final_activation
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        x: torch.Tensor,
+    ) -> torch.Tensor:
         """
         Forward pass.
 
@@ -68,4 +82,6 @@ class AutoEncoder(nn.Module):
         """
         x = self.encoder(x)
         x = self.decoder(x)
-        return self.final(x)
+        if self.final is not None:
+            x = self.final(x)
+        return x
