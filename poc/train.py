@@ -30,11 +30,6 @@ def backward(
         Model.
     config: TrainConfig
         Train config.
-
-    Returns
-    -------
-    grads: {str: torch.Tensor}
-        Dictionary of gradients.
     """
     y = model(x)
     loss = MSELoss()(y, x)
