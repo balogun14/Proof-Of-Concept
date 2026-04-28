@@ -3,6 +3,7 @@ import pytest
 import torch
 import torch.nn as nn
 
+from poc.config import get_device
 from poc.model import AutoEncoder
 
 
@@ -19,7 +20,7 @@ def test_autoencoder(combine_spatial: bool):
     combine_spatial: bool
         Autoencoder that combines spatial dimensions (or not).
     """
-    device = "mps"
+    device = get_device()
     dtype = torch.bfloat16
 
     autoencoder = AutoEncoder(

@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from tqdm import tqdm
 
+import wandb  # type: ignore
 from poc.config import TrainConfig
 from poc.dataset import ImageDataset
 from poc.model import AutoEncoder
@@ -18,7 +19,7 @@ def backward(
     x: torch.Tensor,
     model: nn.Module,
     config: TrainConfig,
-):
+) -> float:
     """
     Backward the diffusion branch.
 
@@ -40,6 +41,8 @@ def backward(
             [p for p in model.parameters() if p.requires_grad],
             max_norm=config.max_grad_norm,
         )
+
+    return loss.item()
 
 
 def train(
@@ -68,20 +71,32 @@ def train(
     model.train()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    for _ in range(config.nb_epochs):
-        for data in tqdm(loader):
+    if config.use_wandb:
+        wandb.init(  # type: ignore
+            project=config.project_name,
+            config=config.model_dump(),
+        )
+
+    for epoch in range(config.nb_epochs):
+        for data in tqdm(loader, desc=f"Epoch {epoch}"):
             x = data[0]
             if len(x) < config.batch_size:
                 continue
 
             x = x.to(device=config.device, dtype=config.dtype)
             optimizer.zero_grad()
-            backward(x=x, model=model, config=config)
+            loss = backward(x=x, model=model, config=config)
             optimizer.step()
+
+            if config.use_wandb:
+                wandb.log({"loss": loss})  # type: ignore
 
     logger.info("Saving models.")
     torch.save(model.state_dict(), output_dir / "model.pt")
     logger.info(f"Models saved at {output_dir / 'model.pt'}.")
+
+    if config.use_wandb:
+        wandb.finish()  # type: ignore
 
 
 def main():

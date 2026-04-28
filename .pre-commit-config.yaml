@@ -3,6 +3,7 @@ repos:
     rev: v1.15.0
     hooks:
       - id: mypy
+        exclude: SimpleModel.ipynb
         args: [--ignore-missing-imports, --explicit-package-bases]
         additional_dependencies:
           [
@@ -14,6 +15,8 @@ repos:
     hooks:
       # Run the linter.
       - id: ruff
+        exclude: SimpleModel.ipynb
         args: [--fix]
       # Run the formatter.
       - id: ruff-format
+        exclude: SimpleModel.ipynb

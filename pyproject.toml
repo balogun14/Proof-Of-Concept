@@ -19,6 +19,7 @@ dependencies = [
     "torchvision>=0.22.0,<1.0.0",
     "matplotlib>=3.10.8,<4.0.0",
     "fastai>=2.8.6,<3.0.0",
+    "wandb>=0.26.1",
 ]
 
 [project.optional-dependencies]

@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
-from poc.config import SMALL_CONFIG
+from poc.config import SMALL_CONFIG, get_device
 from poc.model import AutoEncoder
 from poc.train import train
 
@@ -26,7 +26,7 @@ def test_train_autoencoder(combine_spatial: bool):
     combine_spatial: bool
         Autoencoder that combines spatial dimensions (or not).
     """
-    device = "mps"
+    device = get_device()
     dtype = torch.bfloat16
     batch_size = 16
 
