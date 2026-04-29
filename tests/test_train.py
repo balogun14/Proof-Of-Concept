@@ -30,10 +30,12 @@ def test_train_autoencoder(combine_spatial: bool):
     dtype = torch.bfloat16
     batch_size = 16
 
-    config = SMALL_CONFIG
+    config = SMALL_CONFIG.model_copy()
     config.batch_size = batch_size
     config.device = device
     config.dtype = dtype
+    config.use_wandb = False
+    config.nb_epochs = 1
 
     base_dir = Path(__file__).parent.parent
     shutil.rmtree(base_dir / "data" / "out" / "test_train", ignore_errors=True)

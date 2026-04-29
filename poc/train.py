@@ -134,7 +134,7 @@ def main():
     )
 
     logger.info(f"Number of elements: {len(dataset)}.")
-    logger.info(f"Batches per epoch: {config.batch_size}.")
+    logger.info(f"Batches per epoch: {len(loader)}.")
     logger.info(
         f"Total training steps: {len(dataset) // config.batch_size * config.nb_epochs}."
     )

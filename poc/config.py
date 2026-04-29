@@ -1,12 +1,10 @@
-from typing import Any
-
 import torch
 from pydantic import BaseModel
 
 
 class TrainConfig(BaseModel):
     device: str
-    dtype: Any
+    dtype: torch.dtype
     nb_epochs: int
     batch_size: int
     lr: float = 1e-5

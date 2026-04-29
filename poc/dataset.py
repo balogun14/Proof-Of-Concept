@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from pathlib import Path
 
-import numpy as np
+import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
@@ -28,7 +28,7 @@ class ImageDataset(Dataset):
         """
         return len(self.files)
 
-    def __getitem__(self, i: int) -> tuple[np.ndarray]:
+    def __getitem__(self, i: int) -> tuple[torch.Tensor]:
         """
         Get datapoint.
 
@@ -39,7 +39,7 @@ class ImageDataset(Dataset):
 
         Returns
         -------
-        _: np.ndarray
+        _: torch.Tensor
             Image data.
         """
         image = Image.open(self.files[i])
