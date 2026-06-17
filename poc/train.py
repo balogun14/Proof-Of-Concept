@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from tqdm import tqdm
 
+import wandb  # type: ignore
 from poc.config import TrainConfig
 from poc.dataset import ImageDataset
 from poc.model import AutoEncoder
@@ -68,6 +69,12 @@ def train(
     model.train()
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    if config.use_wandb:
+        wandb.init(  # type: ignore
+            project=config.project_name,
+            config=config.dict(),
+        )
+
     for _ in range(config.nb_epochs):
         for data in tqdm(loader):
             x = data[0]
@@ -78,6 +85,9 @@ def train(
             optimizer.zero_grad()
             backward(x=x, model=model, config=config)
             optimizer.step()
+
+    if config.use_wandb:
+        wandb.finish()  # type: ignore
 
     logger.info("Saving models.")
     torch.save(model.state_dict(), output_dir / "model.pt")
